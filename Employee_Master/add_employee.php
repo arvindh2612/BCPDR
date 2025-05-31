@@ -6,6 +6,18 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Fetch companies
+$companies = $conn->query("SELECT CompanyCode, CompanyName FROM CompanyMaster");
+
+// Fetch departments
+$departments = $conn->query("SELECT DepartmentCode, DepartmentName FROM department_master");
+
+// Fetch distinct designations
+$designations = $conn->query("SELECT DISTINCT DesignationName FROM DESIGNATION_REPOSITORY");
+
+// Fetch locations
+$locations = $conn->query("SELECT location_code, location_name FROM locations");
+
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $employee_code = $_POST['employee_code'];
@@ -90,17 +102,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label>Company *</label>
                     <select name="company" class="form-control" required>
                         <option value="">Select Company</option>
-                        <option>Company A</option>
-                        <option>Company B</option>
+                        <?php while ($row = $companies->fetch_assoc()) { ?>
+                            <option value="<?= $row['CompanyCode']; ?>"><?= $row['CompanyName']; ?></option>
+                        <?php } ?>
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label>Department *</label>
                     <select name="department" class="form-control" required>
                         <option value="">Select Department</option>
-                        <option>HR</option>
-                        <option>IT</option>
-                        <option>Sales</option>
+                        <?php while ($row = $departments->fetch_assoc()) { ?>
+                            <option value="<?= $row['DepartmentCode']; ?>"><?= $row['DepartmentName']; ?></option>
+                        <?php } ?>
                     </select>
                 </div>
             </div>
@@ -110,17 +123,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label>Designation *</label>
                     <select name="designation" class="form-control" required>
                         <option value="">Select Designation</option>
-                        <option>Manager</option>
-                        <option>Developer</option>
-                        <option>Analyst</option>
+                        <?php while ($row = $designations->fetch_assoc()) { ?>
+                            <option><?= $row['DesignationName']; ?></option>
+                        <?php } ?>
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label>Location *</label>
                     <select name="location" class="form-control" required>
                         <option value="">Select Location</option>
-                        <option>New York</option>
-                        <option>London</option>
+                        <?php while ($row = $locations->fetch_assoc()) { ?>
+                            <option value="<?= $row['location_code']; ?>"><?= $row['location_name']; ?></option>
+                        <?php } ?>
                     </select>
                 </div>
                 <div class="col-md-4">
