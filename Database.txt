@@ -147,3 +147,15 @@ CREATE TABLE corrective_preventive_action_report (
 <footer class="bg-dark text-white text-center py-3">
     © 2025 BCPDR System. All rights reserved.
 </footer>
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255),
+    otp VARCHAR(6),
+    otp_expiry DATETIME
+);
+
+
+
+URL - http://localhost/bcpdr/A_panel/login.php
