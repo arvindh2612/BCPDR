@@ -37,12 +37,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $problems_identified = $conn->real_escape_string($_POST["problems_identified"]);
     $target_date = $conn->real_escape_string($_POST["target_date"]);
 
-    $conn->query("INSERT INTO corrective_preventive_action_report 
-    (employee_code, first_name, designation, department, action_date, system_code, system_name, ref_transaction_batch_no, problems_identified, target_date)
-    VALUES ('$employee_code', '$employee_name', '$designation', '$department', '$action_date', '$system_code', '$system_name', '$ref_transaction_batch_no', '$problems_identified', '$target_date')");
+    $sql = "INSERT INTO corrective_preventive_action_report 
+    (employee_code, employee_name, designation, department, action_date, system_code, system_name, ref_transaction_batch_no, problems_identified, target_date)
+    VALUES ('$employee_code', '$employee_name', '$designation', '$department', '$action_date', '$system_code', '$system_name', '$ref_transaction_batch_no', '$problems_identified', '$target_date')";
 
-    header("Location: cpar_list.php");
-    exit();
+    if ($conn->query($sql)) {
+        header("Location: cpar_list.php");
+        exit();
+    } else {
+        echo "Database insert failed: " . $conn->error;
+    }
 }
 ?>
 
@@ -120,14 +124,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <script>
-// JS Data from PHP for designations, departments, and employees
 const designations = <?= json_encode($designations) ?>;
 const departments = <?= json_encode($departments) ?>;
 const employees = <?= json_encode($employees) ?>;
 
 document.getElementById('employee_code').addEventListener('change', function() {
     const empCode = this.value;
-    // Set employee name
     document.getElementById('employee_name').value = employees[empCode] || '';
 
     if(designations[empCode]) {
@@ -149,6 +151,7 @@ document.getElementById('system_code').addEventListener('change', function() {
     document.getElementById('system_name').value = systemName;
 });
 </script>
+
 <br>
 <footer class="bg-dark text-white text-center py-3">
     © 2025 BCPDR System. All rights reserved.

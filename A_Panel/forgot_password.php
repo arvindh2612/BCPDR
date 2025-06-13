@@ -4,43 +4,40 @@ require 'db.php';
 
 $message = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email']);
+    $new_password = $_POST['new_password'];
+    $confirm_password = $_POST['confirm_password'];
 
-    if (empty($username) || empty($password)) {
-        $message = "Please fill all fields.";
+    if (empty($email) || empty($new_password) || empty($confirm_password)) {
+        $message = "Please fill in all fields.";
+    } elseif ($new_password !== $confirm_password) {
+        $message = "Passwords do not match.";
     } else {
-        $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE username = ?");
-        $stmt->bind_param("s", $username);
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows == 1) {
-            $stmt->bind_result($id, $hashed_password, $role);
+            $stmt->bind_result($user_id);
             $stmt->fetch();
+            $stmt->close();
 
-            if (password_verify($password, $hashed_password)) {
-                $_SESSION['username'] = $username;
-                $_SESSION['role'] = $role;
+            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+            $update = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $update->bind_param("si", $hashed_password, $user_id);
+            $update->execute();
 
-                if ($role === 'Admin') {
-                    header("Location: dashboard.php");
-                } elseif ($role === 'Employee') {
-                    header("Location: ../employee_access/Employee_Dashboard.php");
-                } elseif ($role === 'Vendor') {
-                    header("Location: ../vendor_access/vendor_dashboard.php");
-                } else {
-                    $message = "Invalid role. Please contact administrator.";
-                }
-                exit();
+            if ($update->affected_rows > 0) {
+                $message = "Password has been reset successfully.";
             } else {
-                $message = "Invalid password.";
+                $message = "Failed to reset password. Please try again.";
             }
+            $update->close();
         } else {
-            $message = "Username not found.";
+            $message = "Email not found.";
         }
-        $stmt->close();
     }
 }
 ?>
@@ -50,8 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Login - BCPDR</title>
-
+<title>Reset Password - BCPDR</title>
 <style>
   * {
     box-sizing: border-box;
@@ -59,7 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   body {
-    margin: 0; padding: 0;
+    margin: 0;
+    padding: 0;
     height: 100vh;
     background-color: #121417;
     background-image:
@@ -127,7 +124,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     color: #a7b1c2;
   }
 
-  input[type="text"], input[type="password"] {
+  input[type="email"],
+  input[type="password"] {
     width: 100%;
     padding: 12px 15px;
     margin-bottom: 20px;
@@ -139,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   }
 
-  input[type="text"]:focus, input[type="password"]:focus {
+  input:focus {
     background: #39475a;
     outline: none;
     box-shadow: 0 0 12px 3px #81a1c1;
@@ -169,78 +167,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   p.message {
-    color: #bf616a;
+    color: #88c0d0;
     font-weight: 600;
     text-align: center;
     margin-bottom: 20px;
-    text-shadow: 0 0 5px #b35050;
+    text-shadow: 0 0 5px #507f99;
   }
 
-  .register-link, .forgot-link {
+  p.back-link {
     text-align: center;
     margin-top: 15px;
     font-size: 14px;
     color: #a7b1c2;
   }
 
-  .register-link a, .forgot-link a {
+  p.back-link a {
     color: #81a1c1;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
   }
 
-  .register-link a:hover, .forgot-link a:hover {
+  p.back-link a:hover {
     color: #5e81ac;
     text-shadow: 0 0 6px #81a1c1;
   }
-
-  .forgot-button {
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  .forgot-button a {
-    display: inline-block;
-    padding: 10px 20px;
-    background: transparent;
-    color: #81a1c1;
-    font-weight: 600;
-    text-decoration: none;
-    border: 1px solid #81a1c1;
-    border-radius: 8px;
-    transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
-  }
-
-  .forgot-button a:hover {
-    background: #81a1c1;
-    color: #1e262c;
-    transform: scale(1.05);
-  }
 </style>
-
 </head>
 <body>
 
 <div class="glow-effect"></div>
 
 <div class="login-container">
-    <h2>LOGIN</h2>
+    <h2>RESET PASSWORD</h2>
     <?php if ($message): ?>
-        <p class="message"><?php echo htmlspecialchars($message); ?></p>
+        <p class="message"><?php echo $message; ?></p>
     <?php endif; ?>
     <form method="POST" action="">
-        <label for="username">Username:</label>
-        <input id="username" type="text" name="username" required autocomplete="username" autofocus>
+        <label for="email">Email Address</label>
+        <input id="email" type="email" name="email" required>
 
-        <label for="password">Password:</label>
-        <input id="password" type="password" name="password" required autocomplete="current-password">
+        <label for="new_password">New Password</label>
+        <input id="new_password" type="password" name="new_password" required>
 
-        <input type="submit" value="Login">
+        <label for="confirm_password">Confirm Password</label>
+        <input id="confirm_password" type="password" name="confirm_password" required>
 
-       
- <p class="register-link">DId you forget your password? <a href="forgot_password.php">forgot password</a>.</p>
-    <p class="register-link">Don't have an account? <a href="register.php">Register here</a>.</p>
+        <input type="submit" value="Reset Password">
+    </form>
+    <p class="back-link">Go back to <a href="login.php">Login</a></p>
 </div>
 
 </body>

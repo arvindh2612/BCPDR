@@ -155,6 +155,7 @@ CREATE TABLE users (
     otp VARCHAR(6),
     otp_expiry DATETIME
 );
+ALTER TABLE users ADD COLUMN role ENUM('Admin', 'Employee', 'Vendor') NOT NULL DEFAULT 'Employee';
 
 
 

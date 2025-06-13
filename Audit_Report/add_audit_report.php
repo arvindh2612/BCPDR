@@ -144,7 +144,7 @@ function updateEmployeeName(select, inputId) {
     document.getElementById(inputId).value = name;
 }
 </script>
-br>
+
 <footer class="bg-dark text-white text-center py-3">
     © 2025 BCPDR System. All rights reserved.
 </footer>

@@ -1,6 +1,12 @@
 <?php
 $conn = new mysqli("localhost", "root", "", "bcpdr");
 
+// Enable error reporting for MySQLi
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 // Fetch employee first names
 $owners_result = $conn->query("SELECT DISTINCT first_name FROM employees");
 
@@ -63,25 +69,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <option value="">Select</option>
                 <option value="Tier 1 – Mission-Critical">Tier 1 – Mission-Critical</option>
                 <option value="Tier 2 – Critical">Tier 2 – Critical</option>
-                <option value="Tier 3 – Important">Tier 3 – Important</option>
-                <option value="Tier 4 – Noncritical">Tier 4 – Noncritical</option>
+                <option value="Tier 3 - Important">Tier 3 - Important</option>
+                <option value="Tier 4 – Noncritical (Deferrable)">Tier 4 – Noncritical (Deferrable)</option>
             </select>
         </div>
         <div class="mb-3">
-            <label>MTD (hrs)</label>
+            <label>Maximum Tolerable Downtime (hrs)</label>
             <input type="number" name="mtd" class="form-control" min="0" required>
         </div>
         <div class="mb-3">
-            <label>RPO (hrs)</label>
+            <label>Recovery Point Objective (hrs)</label>
             <input type="number" name="rpo" class="form-control" min="0" required>
         </div>
         <div class="mb-3">
-            <label>RTO (hrs)</label>
+            <label>Recovery Time Objective (hrs)</label>
             <input type="number" name="rto" class="form-control" min="0" required>
         </div>
         <button type="submit" class="btn btn-primary">Add System</button>
     </form>
 </div>
+
 <br>
 <footer class="bg-dark text-white text-center py-3">
     © 2025 BCPDR System. All rights reserved.

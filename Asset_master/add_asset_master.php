@@ -1,6 +1,7 @@
 <?php
 $conn = new mysqli("localhost", "root", "", "BCPDR");
 
+// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_code = $_POST['asset_id_code'];
     $class_code = $_POST['asset_class_code'];
@@ -29,6 +30,7 @@ $vendors = $conn->query("SELECT vendor_code FROM vendors");
 $locations = $conn->query("SELECT location_code FROM locations");
 $departments = $conn->query("SELECT DepartmentCode FROM department_master");
 $employees = $conn->query("SELECT first_name FROM employees");
+$asset_classes = $conn->query("SELECT asset_class_code, asset_class_name FROM asset_class");
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +57,14 @@ $employees = $conn->query("SELECT first_name FROM employees");
             </div>
             <div class="col-md-4 mb-3">
                 <label>Asset Class Code</label>
-                <input type="text" name="asset_class_code" class="form-control" required maxlength="10">
+                <select name="asset_class_code" class="form-control" required>
+                    <option value="">-- Select Asset Class --</option>
+                    <?php while($row = $asset_classes->fetch_assoc()): ?>
+                        <option value="<?= $row['asset_class_code'] ?>">
+                            <?= $row['asset_class_code'] ?> - <?= $row['asset_class_name'] ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
             </div>
             <div class="col-md-4 mb-3">
                 <label>New / Old</label>

@@ -1,5 +1,19 @@
 <?php
 $conn = new mysqli("localhost", "root", "", "BCPDR");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Handle delete request
+if (isset($_GET['delete_id'])) {
+    $stmt = $conn->prepare("DELETE FROM vendors WHERE id = ?");
+    $stmt->bind_param("i", $_GET['delete_id']);
+    $stmt->execute();
+    $stmt->close();
+    header("Location: vendor_list.php");
+    exit;
+}
+
 $result = $conn->query("SELECT * FROM vendors");
 $status_map = ['1' => 'Active', '2' => 'Suspended', '3' => 'Terminated'];
 ?>
@@ -38,15 +52,17 @@ $status_map = ['1' => 'Active', '2' => 'Suspended', '3' => 'Terminated'];
         <tbody>
             <?php while($row = $result->fetch_assoc()) { ?>
                 <tr>
-                    <td><?= $row['vendor_code'] ?></td>
-                    <td><?= $row['company_code'] ?></td>
-                    <td><?= $row['category_code'] ?></td>
-                    <td><?= $row['start_date'] ?></td>
-                    <td><?= $row['end_date'] ?></td>
+                    <td><?= htmlspecialchars($row['vendor_code']) ?></td>
+                    <td><?= htmlspecialchars($row['company_code']) ?></td>
+                    <td><?= htmlspecialchars($row['category_code']) ?></td>
+                    <td><?= htmlspecialchars($row['start_date']) ?></td>
+                    <td><?= htmlspecialchars($row['end_date']) ?></td>
                     <td><?= $status_map[$row['status']] ?? 'Unknown' ?></td>
                     <td>
                         <a href="edit_vendor.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-primary">Edit</a>
-                        <a href="delete_vendor.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this vendor?')">Delete</a>
+                        <a href="vendor_list.php?delete_id=<?= $row['id'] ?>" 
+                           class="btn btn-sm btn-danger" 
+                           onclick="return confirm('Are you sure you want to delete this vendor?')">Delete</a>
                     </td>
                 </tr>
             <?php } ?>

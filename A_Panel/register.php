@@ -9,8 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
+    $role = $_POST['role'];
 
-    if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
+    if (empty($username) || empty($email) || empty($password) || empty($confirm_password) || empty($role)) {
         $message = "Please fill all fields.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $message = "Invalid email format.";
@@ -26,11 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $message = "Username or Email already taken.";
         } else {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $insert_stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-            $insert_stmt->bind_param("sss", $username, $email, $hashed_password);
+            $insert_stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+            $insert_stmt->bind_param("ssss", $username, $email, $hashed_password, $role);
 
             if ($insert_stmt->execute()) {
                 $_SESSION['username'] = $username;
+                $_SESSION['role'] = $role;
                 header("Location: login.php");
                 exit();
             } else {
@@ -42,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   body {
     margin: 0; padding: 0;
     height: 100vh;
-    background-color: #0b2347; /* deep navy blue */
+    background-color: #0b2347;
     background-image:
       radial-gradient(circle at top left, rgba(129,161,193,0.3) 0%, transparent 70%),
       radial-gradient(circle at bottom right, rgba(94,129,172,0.25) 0%, transparent 70%);
@@ -90,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   .register-container {
     position: relative;
-    background: #1e2c47; /* dark navy */
+    background: #1e2c47;
     padding: 40px 35px;
     border-radius: 15px;
     box-shadow:
@@ -128,7 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   input[type="text"],
   input[type="email"],
-  input[type="password"] {
+  input[type="password"],
+  select {
     width: 100%;
     padding: 12px 15px;
     margin-bottom: 20px;
@@ -142,7 +144,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   input[type="text"]:focus,
   input[type="email"]:focus,
-  input[type="password"]:focus {
+  input[type="password"]:focus,
+  select:focus {
     background: #3c517c;
     outline: none;
     box-shadow: 0 0 12px 3px #81a1c1;
@@ -221,6 +224,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <label for="confirm_password">Confirm Password:</label>
         <input id="confirm_password" type="password" name="confirm_password" required autocomplete="new-password">
+
+        <label for="role">Register As:</label>
+        <select id="role" name="role" required>
+            <option value="">-- Select Role --</option>
+            <option value="Admin">Admin</option>
+            <option value="Employee">Employee</option>
+            <option value="Vendor">Vendor</option>
+        </select>
 
         <input type="submit" value="Register">
     </form>
