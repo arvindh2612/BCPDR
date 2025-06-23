@@ -22,7 +22,7 @@ $result = $conn->query($query);
         <span class="navbar-brand mb-0 h1">Add Designation</span>
         <span class="text-light">
             <a href="add_designation_repository.php" class="text-light text-decoration-none me-3">🏢 Add </a>
-            <a href="list_designation_repository.php" class="text-light text-decoration-none">📋  List</a>
+            <a href="list_designation_repository.php" class="text-light text-decoration-none">📋 List</a>
         </span>
     </div>
 </nav>
@@ -45,16 +45,16 @@ $result = $conn->query($query);
         <tbody>
         <?php while ($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><?= $row['EmployeeCode'] ?></td>
-                <td><?= $row['DepartmentCode'] ?></td>
-                <td><?= $row['LocationCode'] ?></td>
-                <td><?= $row['DesignationName'] ?></td>
-                <td><?= $row['CurrentInPosition'] ?></td>
-                <td><?= $row['StartDate'] ?></td>
-                <td><?= $row['CurrentInPosition'] === 'Y' ? '' : $row['EndDate'] ?></td>
+                <td><?= htmlspecialchars($row['EmployeeCode']) ?></td>
+                <td><?= htmlspecialchars($row['DepartmentCode']) ?></td>
+                <td><?= htmlspecialchars($row['LocationCode']) ?></td>
+                <td><?= htmlspecialchars($row['DesignationName']) ?></td>
+                <td><?= htmlspecialchars($row['CurrentInPosition']) ?></td>
+                <td><?= htmlspecialchars($row['StartDate']) ?></td>
+                <td><?= $row['EndDate'] ? htmlspecialchars($row['EndDate']) : '--' ?></td>
                 <td>
-                    <a href="edit_designation_repository.php?emp=<?= $row['EmployeeCode'] ?>" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="delete_designation_repository.php?emp=<?= $row['EmployeeCode'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this entry?');">Delete</a>
+                    <a href="edit_designation_repository.php?emp=<?= urlencode($row['EmployeeCode']) ?>" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="delete_designation_repository.php?emp=<?= urlencode($row['EmployeeCode']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this entry?');">Delete</a>
                 </td>
             </tr>
         <?php endwhile; ?>
@@ -65,5 +65,6 @@ $result = $conn->query($query);
 <footer class="bg-dark text-white text-center py-3">
     © 2025 BCPDR System. All rights reserved.
 </footer>
+
 </body>
 </html>

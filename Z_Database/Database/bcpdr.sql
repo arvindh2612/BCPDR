@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2025 at 05:08 PM
+-- Generation Time: Jun 23, 2025 at 07:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -38,7 +38,8 @@ CREATE TABLE `asset_class` (
 --
 
 INSERT INTO `asset_class` (`id`, `asset_class_code`, `asset_class_name`) VALUES
-(2, '1', 'gear');
+(2, '1', 'computer system'),
+(3, '2', 'laptop');
 
 -- --------------------------------------------------------
 
@@ -65,7 +66,8 @@ CREATE TABLE `asset_master` (
 --
 
 INSERT INTO `asset_master` (`id`, `asset_id_code`, `asset_class_code`, `is_new_old`, `purchase_date`, `invoice_no`, `vendor_code`, `location_code`, `department_code`, `asset_owner`, `asset_value`) VALUES
-(4, '1', '1', 'New', '2025-05-24', '1', '1', '1', '11', 'arvind', 5000.00);
+(4, '1', '1', 'New', '2025-05-24', '1', '1', '1', '11', 'arvind', 5000.00),
+(5, '2', '2', 'New', '2025-06-10', '2', '1', '1', '2', 'arvi', 12.00);
 
 -- --------------------------------------------------------
 
@@ -94,7 +96,8 @@ CREATE TABLE `audit_report` (
 --
 
 INSERT INTO `audit_report` (`id`, `audit_no`, `report_no`, `department_code`, `department_name`, `auditor_employee_code`, `auditor_employee_name`, `auditee_employee_code`, `auditee_employee_name`, `std_doc_ref`, `problems_identified`, `proposed_action`, `target_date`) VALUES
-(5, '1', '1', '1', 'HR', '1', 'ARVIND', '1', 'ARVIND', NULL, 'nill', 'nill', '2025-05-10');
+(5, '1', '1', '1', 'HR', '1', 'ARVIND', '1', 'ARVIND', NULL, 'nill', 'nill', '2025-05-10'),
+(6, '2', '2', '2', 'DEVELOPMENT', '3', 'arvindh', '2', 'Arvind', NULL, 'Document specific issues or areas of concern that could impact business operations or compliance.', 'Outline the corrective or preventive measures planned to address the root cause and avoid future recurrence.', '2025-06-12');
 
 -- --------------------------------------------------------
 
@@ -143,7 +146,8 @@ CREATE TABLE `companymaster` (
 --
 
 INSERT INTO `companymaster` (`CompanyCode`, `CompanyName`, `Address1`, `Address2`, `Address3`, `CityCode`, `Pincode`, `PrimaryContactName`, `OfficePhoneNumber`, `EmergencyPhoneNumber`, `SecondaryContactName`, `EmailAddress`, `SpecialInstructions`) VALUES
-('1', 'Finpro', '965 6th cross oil mill road lingarajapuram,', '965 6th cross oil mill road lingarajapuramBangalore, Karnataka, 560084, India, ', '965 6th cross oil mill road lingarajapuram, Ufuf, Bangalore, Karnataka, 560084, India, ', '560084', '560084', 'Arvind', '8971505277', '', 'Arvind H ', 'arvind261202@gmail.com', '');
+('1', 'Finpro', '965 6th cross oil mill road lingarajapuram,', '965 6th cross oil mill road lingarajapuramBangalore, Karnataka, 560084, India, ', '965 6th cross oil mill road lingarajapuram, Ufuf, Bangalore, Karnataka, 560084, India, ', '560084', '560084', 'Arvind', '8971505277', '', 'Arvind H ', 'arvind261202@gmail.com', ''),
+('2', 'GOOGLE', '965 6th cross ', 'oil mill road lingarajapuram, ', ' Bangalore, Karnataka, 560084, India', '1', '560084', '9740641513', '9740641613', '', '', 'google@gmail.com', 'NILL');
 
 -- --------------------------------------------------------
 
@@ -170,7 +174,8 @@ CREATE TABLE `corrective_preventive_action_report` (
 --
 
 INSERT INTO `corrective_preventive_action_report` (`id`, `employee_code`, `employee_name`, `designation`, `department`, `action_date`, `system_code`, `system_name`, `ref_transaction_batch_no`, `problems_identified`, `target_date`) VALUES
-(1, '1', 'arvind', 'manager', 'cs', '2025-05-29', '1', 'arvind', '123', 'nill', '2025-05-29');
+(1, '1', 'arvind', 'manager', 'cs', '2025-05-29', '3', 'arvind', '123', 'improving accuray', '2025-05-29'),
+(2, '1', 'ARVIND', 'manager', 'HR', '2025-06-12', '1', 'arvind', '123', 'Incomplete or inaccurate employee/vendor records', '2025-06-12');
 
 -- --------------------------------------------------------
 
@@ -188,7 +193,8 @@ CREATE TABLE `department_master` (
 --
 
 INSERT INTO `department_master` (`DepartmentCode`, `DepartmentName`) VALUES
-('1', 'HR');
+('1', 'HR'),
+('2', 'DEVELOPMENT');
 
 -- --------------------------------------------------------
 
@@ -211,7 +217,7 @@ CREATE TABLE `designation_repository` (
 --
 
 INSERT INTO `designation_repository` (`EmployeeCode`, `DepartmentCode`, `LocationCode`, `DesignationName`, `CurrentInPosition`, `StartDate`, `EndDate`) VALUES
-('1', '1', '1', 'manager', 'Y', '2025-05-01', NULL);
+('1', '1', '1', 'manager', 'Y', '2025-05-01', '2025-06-29');
 
 -- --------------------------------------------------------
 
@@ -243,7 +249,9 @@ CREATE TABLE `employees` (
 INSERT INTO `employees` (`id`, `employee_code`, `first_name`, `middle_name`, `last_name`, `company`, `department`, `designation`, `location`, `phone1`, `phone2`, `email1`, `email2`, `created_at`) VALUES
 (2, '1', 'ARVIND', '', 'Krishna', 'Finpro', 'HR', 'maager', 'banglore', '9740641613', '9898592517', 'arvind@gmail.com', 'arvind261202@gmail.com', '2025-05-27 14:35:52'),
 (3, '2', 'Arvind', '', 'Krishna', '1', '1', 'maager', '1', '756789876', '', 'arvind26@gmail.com', 'arvind@gmail.com', '2025-05-31 05:59:23'),
-(4, '3', 'arvindh', '', 'krishna', 'Finpro', '', 'maager', 'banglore', '8765456789', '', 'arvind2@gmail.com', 'arvind3@gmail.com', '2025-05-31 06:02:12');
+(4, '3', 'arvindh', '', 'krishna', 'Finpro', '', 'maager', 'banglore', '8765456789', '', 'arvind2@gmail.com', 'arvind3@gmail.com', '2025-05-31 06:02:12'),
+(5, '4', 'arvi', '', 'krishna', '1', '1', 'manager', '1', '8765456789', '', 'arvind2@gmail.com', 'arvind3@gmail.com', '2025-06-10 18:14:27'),
+(6, '5', 'arviii', '', 'krishna', '2', '1', 'manager', '1', '8765456789', '', 'arvind2@gmail.com', 'arvind3@gmail.com', '2025-06-22 03:33:36');
 
 -- --------------------------------------------------------
 
@@ -331,7 +339,37 @@ CREATE TABLE `system_master` (
 --
 
 INSERT INTO `system_master` (`id`, `system_code`, `system_name`, `system_owner`, `criticality`, `mtd`, `rpo`, `rto`) VALUES
-(1, '1', 'arvind', 'arvind', '', 12, 1, 2);
+(3, '3', 'arvind', 'ARVIND', 'Tier 1 – Mission-Critical', 1, 2, 3),
+(4, '3', 'arvind', 'ARVIND', 'Tier 3 - Important', 1, 2, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `role` enum('Admin','Employee','Vendor') NOT NULL DEFAULT 'Employee',
+  `password_reset_token` varchar(64) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `role`, `password_reset_token`) VALUES
+(2, 'admin', 'admin@gmail.com', '$2y$10$8CwBZomFnqZqSDXCfmFNNe7sOYdJhoER/KDkIwMk.IMdK2hXvTAje', '2025-06-04 15:27:49', 'Employee', NULL),
+(3, 'arvind', 'arvind261202@gmail.com', '$2y$10$FuWGjYJX.UkQrVdLyv/w.OxvK07g/JD2JbWtIjs7G6n05zjlsYS.6', '2025-06-10 18:13:15', 'Employee', '23d49f034e57b66d77ebb252fb889e8cb46b6473cdfa61a4904c082f9fc2d955'),
+(4, 'admin1', 'admin1@gmail.com', '$2y$10$dD/w25PpKpONdqNpma6cxuR82WfL3Z4EXJ6T5F5q3EOPfISU26ed2', '2025-06-11 05:46:05', 'Admin', NULL),
+(5, 'arvind1', 'arvind1@gmail.com', '$2y$10$XeGaOTehOLPNfx42NAF6peRUX/ApQ5eKdKCng2MVH3WL.1iDZfPde', '2025-06-11 05:47:20', 'Employee', NULL),
+(6, 'krishna', 'krishna1@gmail.com', '$2y$10$GgcJH2wTXS/is8bd0/uBBekL8l1uJGKkoBikf03NBv3a/XJGLnwJu', '2025-06-11 05:49:18', 'Vendor', NULL),
+(7, 'test', 'test@gmail.com', '$2y$10$p5G52wXQO56HfHfg9MfnROI9gJqnXHySjpGpWiUA4TjflfGlV4y6W', '2025-06-11 06:01:33', 'Admin', NULL),
+(8, 'hari', 'hari200@gmail.com', '$2y$10$qE0X7QVVWY.m/DfTUou6GuPd92NVeNcON//QX2HxJGAXGFqp9uYDO', '2025-06-22 03:33:03', 'Admin', NULL);
 
 -- --------------------------------------------------------
 
@@ -355,7 +393,8 @@ CREATE TABLE `vendors` (
 --
 
 INSERT INTO `vendors` (`id`, `vendor_code`, `company_code`, `category_code`, `start_date`, `end_date`, `status`, `created_at`) VALUES
-(1, '1', '1', '1', '2025-05-31', '2025-05-28', '1', '2025-05-27 16:12:37');
+(1, '1', '1', '1', '2025-05-31', '2025-05-28', '1', '2025-05-27 16:12:37'),
+(3, '5', '1', '1', '2025-06-13', '2025-06-25', '1', '2025-06-14 14:45:26');
 
 -- --------------------------------------------------------
 
@@ -374,7 +413,7 @@ CREATE TABLE `vendor_category` (
 --
 
 INSERT INTO `vendor_category` (`id`, `category_code`, `category_name`) VALUES
-(1, '1', 'ven');
+(1, '1', 'System');
 
 --
 -- Indexes for dumped tables
@@ -456,6 +495,14 @@ ALTER TABLE `system_master`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- Indexes for table `vendors`
 --
 ALTER TABLE `vendors`
@@ -475,19 +522,19 @@ ALTER TABLE `vendor_category`
 -- AUTO_INCREMENT for table `asset_class`
 --
 ALTER TABLE `asset_class`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `asset_master`
 --
 ALTER TABLE `asset_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `audit_report`
 --
 ALTER TABLE `audit_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `city_master`
@@ -499,43 +546,49 @@ ALTER TABLE `city_master`
 -- AUTO_INCREMENT for table `corrective_preventive_action_report`
 --
 ALTER TABLE `corrective_preventive_action_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `state_master`
 --
 ALTER TABLE `state_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `system_asset_repository`
 --
 ALTER TABLE `system_asset_repository`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `system_master`
 --
 ALTER TABLE `system_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `vendor_category`

@@ -1,6 +1,7 @@
 <?php
 $conn = new mysqli("localhost", "root", "", "BCPDR");
-if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
+if ($conn->connect_error)
+    die("Connection failed: " . $conn->connect_error);
 
 $empCode = $_GET['emp'] ?? '';
 if (!$empCode) {
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $desg = $_POST['designation_name'];
     $current = $_POST['current_in_position'];
     $start = $_POST['start_date'];
-    $end = $current === 'Y' ? NULL : $_POST['end_date'];
+    $end = empty($_POST['end_date']) ? NULL : $_POST['end_date'];
 
     $stmt = $conn->prepare("UPDATE DESIGNATION_REPOSITORY SET EmployeeCode=?, DepartmentCode=?, LocationCode=?, DesignationName=?, CurrentInPosition=?, StartDate=?, EndDate=? WHERE EmployeeCode=?");
     $stmt->bind_param("ssssssss", $emp, $dept, $loc, $desg, $current, $start, $end, $empCode);
@@ -105,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="col-md-3">
             <label>Current In Position</label>
-            <select name="current_in_position" class="form-select" onchange="toggleEndDate(this)" required>
+            <select name="current_in_position" class="form-select" required>
                 <option value="Y" <?= $data['CurrentInPosition'] === 'Y' ? 'selected' : '' ?>>Y</option>
                 <option value="N" <?= $data['CurrentInPosition'] === 'N' ? 'selected' : '' ?>>N</option>
             </select>
@@ -116,23 +117,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="date" name="start_date" value="<?= htmlspecialchars($data['StartDate']) ?>" class="form-control" required>
         </div>
 
-        <div class="col-md-3" id="endDateGroup">
+        <div class="col-md-3">
             <label>End Date</label>
             <input type="date" name="end_date" class="form-control" value="<?= htmlspecialchars($data['EndDate']) ?>">
         </div>
-
+<br>
         <div class="col-md-12">
             <button class="btn btn-primary">Update</button>
         </div>
     </form>
-</div>
-
-<script>
-function toggleEndDate(select) {
-    document.getElementById('endDateGroup').style.display = (select.value === 'Y') ? 'none' : 'block';
-}
-window.onload = () => toggleEndDate(document.querySelector('[name="current_in_position"]'));
-</script>
-
+</div><br><br>
+<footer class="bg-dark text-white text-center py-3">
+    © 2025 BCPDR System. All rights reserved.
+</footer>
 </body>
 </html>
